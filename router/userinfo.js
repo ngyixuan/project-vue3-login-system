@@ -8,6 +8,9 @@ const {
   update_userinfo_schema,
   update_password_schema,
   update_avatar_schema,
+  import_user_manage,
+  get_manage_user,
+  update_role,
 } = require("../schema/user");
 
 //获取用户信息
@@ -21,11 +24,52 @@ router.post(
   expressJoi(manage_user_schema),
   userinfo_handler.getUserManageList
 );
+//获取所有员工列表
+router.get("/userManage/allList", userinfo_handler.getUserManageAllList);
+//获取员工id
+router.post(
+  "/userManage/detail",
+  expressJoi(get_manage_user),
+  userinfo_handler.getUserManageDetail
+);
+//获取指定用户角色
+router.post(
+  "/userManage/role",
+  expressJoi(get_manage_user),
+  userinfo_handler.getUserManageRole
+);
+//为员工分配角色
+router.post(
+  "/userManage/updateRole",
+  expressJoi(update_role),
+  userinfo_handler.updateUserRole
+);
+//获取角色列表
+router.get("/role/list", userinfo_handler.getRoleList);
+//获取所有的权限
+router.get("/permission/list", userinfo_handler.getPermission);
 router.post(
   "/userinfo",
   expressJoi(update_userinfo_schema),
   userinfo_handler.updateUserInfo
 );
+//获取指定角色的权限
+router.post(
+  "/role/permission",
+  expressJoi(get_manage_user),
+  userinfo_handler.getUserPermission
+);
+router.post(
+  "/userManage/batch/import",
+
+  userinfo_handler.importUserManage
+);
+
+// router.post(
+//   "/userManage/detail",
+//   expressJoi(get_manage_user),
+//   userinfo_handler.getUserManage
+// );
 router.post(
   "/updatepwd",
   expressJoi(update_password_schema),
@@ -36,4 +80,5 @@ router.post(
   expressJoi(update_avatar_schema),
   userinfo_handler.updateAvatar
 );
+
 module.exports = router;

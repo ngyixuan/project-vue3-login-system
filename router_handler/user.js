@@ -55,7 +55,6 @@ exports.regUser = (req, res) => {
 // 登录的处理函数
 exports.login = (req, res) => {
   const userinfo = req.body;
-  console.log("userinfo", userinfo);
   const sql = `select * from ev_users where username=?`;
   db.query(sql, userinfo.username, (err, results) => {
     if (err) {
