@@ -3,12 +3,29 @@ const bcrypt = require("bcryptjs");
 
 exports.getUserInfo = (req, res) => {
   const sql = `
-select id, username, password, avatar, title, role_id, (select group_concat(json_object( 'id',id,'title',title))  from ev_role where ev_role.id = ev_users.role_id  ) as role  from ev_users 
+select id, username, password, avatar, title, role_id, 
+(select group_concat(json_object( 'id',id,'title',title))  from ev_role where ev_role.id = ev_users.role_id  ) as role, 
+(select group_concat(menus) from ev_permission_menus )as permission_menu,
+(select group_concat('points',points) from ev_permision_points )as permision_points   from ev_users 
 `;
 
   db.query(sql, req.user.id, (err, results) => {
     // 1. 执行 SQL 语句失败
+    // console.log(results[0].permission_menu);
+    results[0].permission_menu = results[0].permission_menu.split(",");
+    results[0].permision_points = results[0].permision_points.split(",");
+    // result[0].permission = {
+    //   menu: results[0].permission_menu,
+    //   points: results[0].permision_points,
+    // };
+    let obj = {
+      menus: [],
+      points: [],
+    };
+    obj.menus = results[0].permission_menu;
+    obj.points = results[0].permision_points;
 
+    results[0].permission = obj;
     // 处理字符串对象
     results[0].role = eval("(" + results[0].role + ")");
 
